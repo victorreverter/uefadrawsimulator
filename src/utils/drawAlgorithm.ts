@@ -1,4 +1,4 @@
-import type { Team, Matchup, TeamDrawResult } from '../types';
+import type { Matchup, TeamDrawResult } from '../types';
 import { teams } from '../data/teams';
 
 /**
@@ -177,7 +177,7 @@ export const validateDraw = (results: TeamDrawResult[]): boolean => {
             }
         });
 
-        for (const [pot, counts] of potCounts) {
+        for (const [_pot, counts] of potCounts) {
             if (counts.home !== 1 || counts.away !== 1) {
                 return false;
             }
