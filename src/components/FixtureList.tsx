@@ -25,7 +25,7 @@ export const FixtureList = ({ fixtures }: FixtureListProps) => {
                             </p>
                         </div>
 
-                        <div className="flex-1 overflow-y-auto max-h-[600px] space-y-3 custom-scrollbar pr-2">
+                        <div className="flex-1 overflow-y-auto max-h-[1030px] space-y-3 custom-scrollbar pr-2">
                             {fixture.matches.map((match) => (
                                 <div
                                     key={match.id}
