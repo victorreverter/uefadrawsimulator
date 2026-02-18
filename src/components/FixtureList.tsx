@@ -3,9 +3,14 @@ import type { Fixture } from '../types';
 
 interface FixtureListProps {
     fixtures: Fixture[];
+    selectedMatchday: number | null;
 }
 
-export const FixtureList = ({ fixtures }: FixtureListProps) => {
+export const FixtureList = ({ fixtures, selectedMatchday }: FixtureListProps) => {
+    const filteredFixtures = selectedMatchday
+        ? fixtures.filter(f => f.matchday === selectedMatchday)
+        : fixtures;
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
@@ -13,8 +18,8 @@ export const FixtureList = ({ fixtures }: FixtureListProps) => {
             exit={{ opacity: 0 }}
             className="w-full max-w-7xl mx-auto"
         >
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-                {fixtures.map((fixture) => (
+            <div className={`grid gap-6 ${selectedMatchday ? 'grid-cols-1 max-w-2xl mx-auto' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-2'}`}>
+                {filteredFixtures.map((fixture) => (
                     <div key={fixture.matchday} className="glass-card p-6 flex flex-col h-full">
                         <div className="border-b border-white/10 pb-4 mb-4">
                             <h3 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">

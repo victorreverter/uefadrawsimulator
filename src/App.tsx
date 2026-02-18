@@ -17,6 +17,7 @@ function App() {
   const [drawResults, setDrawResults] = useState<TeamDrawResult[]>([]);
   const [fixtures, setFixtures] = useState<Fixture[]>([]);
   const [activeTab, setActiveTab] = useState<'teams' | 'fixtures'>('teams');
+  const [selectedMatchday, setSelectedMatchday] = useState<number | null>(null);
 
   const handleStartDraw = () => {
     setAppState('drawing');
@@ -56,6 +57,7 @@ function App() {
     setAppState('initial');
     setDrawResults([]);
     setFixtures([]);
+    setSelectedMatchday(null);
   };
 
   return (
@@ -154,8 +156,8 @@ function App() {
                     <button
                       onClick={() => setActiveTab('teams')}
                       className={`px-6 py-2 rounded-md font-semibold transition-all duration-300 ${activeTab === 'teams'
-                          ? 'bg-blue-600 text-white shadow-lg'
-                          : 'text-gray-400 hover:text-white hover:bg-white/10'
+                        ? 'bg-blue-600 text-white shadow-lg'
+                        : 'text-gray-400 hover:text-white hover:bg-white/10'
                         }`}
                     >
                       All Teams
@@ -163,13 +165,37 @@ function App() {
                     <button
                       onClick={() => setActiveTab('fixtures')}
                       className={`px-6 py-2 rounded-md font-semibold transition-all duration-300 ${activeTab === 'fixtures'
-                          ? 'bg-blue-600 text-white shadow-lg'
-                          : 'text-gray-400 hover:text-white hover:bg-white/10'
+                        ? 'bg-blue-600 text-white shadow-lg'
+                        : 'text-gray-400 hover:text-white hover:bg-white/10'
                         }`}
                     >
                       Match Schedule
                     </button>
                   </div>
+
+                  {activeTab === 'fixtures' && (
+                    <div className="flex flex-wrap justify-center gap-2 max-w-2xl px-4 py-2 bg-white/5 rounded-lg border border-white/10 animate-fade-in mt-2">
+                      <button
+                        onClick={() => setSelectedMatchday(null)}
+                        className={`px-3 py-1 rounded text-sm font-medium transition-colors ${selectedMatchday === null ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white hover:bg-white/10'
+                          }`}
+                      >
+                        All
+                      </button>
+                      {[1, 2, 3, 4, 5, 6, 7, 8].map(day => (
+                        <button
+                          key={day}
+                          onClick={() => setSelectedMatchday(day)}
+                          className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all ${selectedMatchday === day
+                              ? 'bg-blue-600 text-white shadow-lg scale-110'
+                              : 'text-gray-400 hover:text-white hover:bg-white/10'
+                            }`}
+                        >
+                          {day}
+                        </button>
+                      ))}
+                    </div>
+                  )}
 
                   <button
                     onClick={handleReset}
@@ -183,7 +209,7 @@ function App() {
               {activeTab === 'teams' ? (
                 <TeamList results={drawResults} />
               ) : (
-                <FixtureList fixtures={fixtures} />
+                <FixtureList fixtures={fixtures} selectedMatchday={selectedMatchday} />
               )}
             </motion.div>
           )}
