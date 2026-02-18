@@ -5,7 +5,9 @@ import { TeamList } from './components/TeamList';
 import { DrawAnimation } from './components/DrawAnimation';
 import { getTeamsByPot } from './data/teams';
 import { simulateDraw, validateDraw } from './utils/drawAlgorithm';
-import type { TeamDrawResult } from './types';
+import { FixtureList } from './components/FixtureList';
+import { generateFixtures } from './utils/scheduler';
+import type { TeamDrawResult, Fixture } from './types';
 import './index.css';
 
 type AppState = 'initial' | 'drawing' | 'results';
@@ -13,6 +15,8 @@ type AppState = 'initial' | 'drawing' | 'results';
 function App() {
   const [appState, setAppState] = useState<AppState>('initial');
   const [drawResults, setDrawResults] = useState<TeamDrawResult[]>([]);
+  const [fixtures, setFixtures] = useState<Fixture[]>([]);
+  const [activeTab, setActiveTab] = useState<'teams' | 'fixtures'>('teams');
 
   const handleStartDraw = () => {
     setAppState('drawing');
@@ -34,7 +38,13 @@ function App() {
 
       console.log('Draw completed successfully!');
       setDrawResults(results);
+
+      // Generate fixtures
+      const generatedFixtures = generateFixtures(results);
+      setFixtures(generatedFixtures);
+
       setAppState('results');
+      setActiveTab('teams');
     } catch (error) {
       console.error('Draw failed:', error);
       alert('Draw failed: ' + (error as Error).message);
@@ -45,6 +55,7 @@ function App() {
   const handleReset = () => {
     setAppState('initial');
     setDrawResults([]);
+    setFixtures([]);
   };
 
   return (
@@ -138,17 +149,42 @@ function App() {
                   </div>
                 </motion.div>
 
-                <div className="mt-4">
+                <div className="mt-4 flex flex-col items-center gap-4">
+                  <div className="flex bg-white/5 rounded-lg p-1 border border-white/10">
+                    <button
+                      onClick={() => setActiveTab('teams')}
+                      className={`px-6 py-2 rounded-md font-semibold transition-all duration-300 ${activeTab === 'teams'
+                          ? 'bg-blue-600 text-white shadow-lg'
+                          : 'text-gray-400 hover:text-white hover:bg-white/10'
+                        }`}
+                    >
+                      All Teams
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('fixtures')}
+                      className={`px-6 py-2 rounded-md font-semibold transition-all duration-300 ${activeTab === 'fixtures'
+                          ? 'bg-blue-600 text-white shadow-lg'
+                          : 'text-gray-400 hover:text-white hover:bg-white/10'
+                        }`}
+                    >
+                      Match Schedule
+                    </button>
+                  </div>
+
                   <button
                     onClick={handleReset}
-                    className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg font-semibold transition-all duration-300"
+                    className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg font-semibold transition-all duration-300 text-sm"
                   >
                     🔄 New Draw
                   </button>
                 </div>
               </div>
 
-              <TeamList results={drawResults} />
+              {activeTab === 'teams' ? (
+                <TeamList results={drawResults} />
+              ) : (
+                <FixtureList fixtures={fixtures} />
+              )}
             </motion.div>
           )}
         </AnimatePresence>

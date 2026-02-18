@@ -22,3 +22,15 @@ export interface DrawState {
     isComplete: boolean;
     currentTeamIndex: number;
 }
+
+export interface Match {
+    id: string; // unique match ID
+    homeTeam: Team;
+    awayTeam: Team;
+    matchday: number;
+}
+
+export interface Fixture {
+    matchday: number;
+    matches: Match[];
+}
