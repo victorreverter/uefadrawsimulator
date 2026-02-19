@@ -69,15 +69,15 @@ function App() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-            UEFA Champions League
-          </h1>
+          <div className="flex items-center justify-center gap-6">
+            <img src="/uefadrawsimulator/champions_league.svg" alt="Champions League" className="w-20 h-20 md:w-28 md:h-28 object-contain" />
+            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+              Champions League
+            </h1>
+          </div>
           <h2 className="text-3xl md:text-4xl font-semibold text-white mb-2">
             Draw Simulator 2025-2026
           </h2>
-          <p className="text-gray-400 text-lg">
-            Swiss Model (League Phase) - 36 Teams
-          </p>
         </motion.div>
 
         {/* Initial State: Pot Display */}
@@ -187,8 +187,8 @@ function App() {
                           key={day}
                           onClick={() => setSelectedMatchday(day)}
                           className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all ${selectedMatchday === day
-                              ? 'bg-blue-600 text-white shadow-lg scale-110'
-                              : 'text-gray-400 hover:text-white hover:bg-white/10'
+                            ? 'bg-blue-600 text-white shadow-lg scale-110'
+                            : 'text-gray-400 hover:text-white hover:bg-white/10'
                             }`}
                         >
                           {day}
