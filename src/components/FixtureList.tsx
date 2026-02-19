@@ -39,6 +39,7 @@ export const FixtureList = ({ fixtures, selectedMatchday }: FixtureListProps) =>
                                     {/* Home Team */}
                                     <div className="flex items-center gap-2 flex-1 min-w-0">
                                         <span className={`w-2 h-2 rounded-full ${getPotColor(match.homeTeam.pot)}`}></span>
+                                        {match.homeTeam.logo && <img src={match.homeTeam.logo} alt="" className="w-5 h-5 object-contain" />}
                                         <span className="text-sm font-semibold text-white truncate" title={match.homeTeam.name}>
                                             {match.homeTeam.name}
                                         </span>
@@ -53,6 +54,7 @@ export const FixtureList = ({ fixtures, selectedMatchday }: FixtureListProps) =>
                                         <span className="text-sm font-semibold text-white truncate text-right" title={match.awayTeam.name}>
                                             {match.awayTeam.name}
                                         </span>
+                                        {match.awayTeam.logo && <img src={match.awayTeam.logo} alt="" className="w-5 h-5 object-contain" />}
                                         <span className={`w-2 h-2 rounded-full ${getPotColor(match.awayTeam.pot)}`}></span>
                                     </div>
                                 </div>

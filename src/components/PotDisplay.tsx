@@ -40,8 +40,11 @@ export const PotDisplay: React.FC<PotDisplayProps> = ({ pot, teams }) => {
                         transition={{ duration: 0.3, delay: index * 0.05 }}
                         className="bg-white/5 hover:bg-white/10 rounded-lg px-4 py-3 transition-all duration-200 cursor-pointer"
                     >
-                        <div className="text-sm font-medium">
-                            {team.name} <span className="text-gray-400">({team.countryCode})</span>
+                        <div className="flex items-center gap-3">
+                            {team.logo && <img src={team.logo} alt={team.name} className="w-8 h-8 object-contain" />}
+                            <div className="text-sm font-medium">
+                                {team.name} <span className="text-gray-400">({team.countryCode})</span>
+                            </div>
                         </div>
                     </motion.div>
                 ))}

@@ -4,6 +4,7 @@ export interface Team {
     country: string;
     countryCode: string;
     pot: 1 | 2 | 3 | 4;
+    logo?: string;
 }
 
 export interface Matchup {

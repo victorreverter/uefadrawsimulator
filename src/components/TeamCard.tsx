@@ -26,10 +26,13 @@ export const TeamCard: React.FC<TeamCardProps> = ({ result }) => {
             onClick={() => setIsExpanded(!isExpanded)}
         >
             <div className="flex items-center justify-between mb-3">
-                <div>
-                    <h3 className="font-bold text-lg">
-                        {team.name} <span className="text-gray-400 text-sm">({team.countryCode})</span>
-                    </h3>
+                <div className="flex items-center gap-3">
+                    {team.logo && <img src={team.logo} alt={team.name} className="w-12 h-12 object-contain" />}
+                    <div>
+                        <h3 className="font-bold text-lg">
+                            {team.name} <span className="text-gray-400 text-sm">({team.countryCode})</span>
+                        </h3>
+                    </div>
                 </div>
                 <div className={`px-3 py-1 rounded-full bg-gradient-to-r ${potColors[team.pot]} text-white text-xs font-bold`}>
                     Pot {team.pot}
@@ -56,9 +59,12 @@ export const TeamCard: React.FC<TeamCardProps> = ({ result }) => {
                                 <span className={`text-xs font-bold px-2 py-1 rounded ${matchup.isHome ? 'bg-green-600' : 'bg-blue-600'}`}>
                                     {matchup.isHome ? 'H' : 'A'}
                                 </span>
-                                <span className="text-sm">
-                                    {matchup.opponent.name} <span className="text-gray-400">({matchup.opponent.countryCode})</span>
-                                </span>
+                                <div className="flex items-center gap-2">
+                                    {matchup.opponent.logo && <img src={matchup.opponent.logo} alt="" className="w-6 h-6 object-contain" />}
+                                    <span className="text-sm">
+                                        {matchup.opponent.name} <span className="text-gray-400">({matchup.opponent.countryCode})</span>
+                                    </span>
+                                </div>
                             </div>
                             <div className={`text-xs px-2 py-1 rounded bg-gradient-to-r ${potColors[matchup.opponent.pot]} text-white`}>
                                 Pot {matchup.opponent.pot}
