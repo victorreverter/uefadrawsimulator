@@ -1,16 +1,15 @@
-import type { Matchup, TeamDrawResult } from '../types';
-import { teams } from '../data/teams';
+import type { Team, Matchup, TeamDrawResult } from '../types';
 
 /**
  * Draw algorithm with pot balance - retries until valid
  * Each team must play 2 opponents from each pot (1 home, 1 away)
  */
-export const simulateDraw = (): TeamDrawResult[] => {
+export const simulateDraw = (teams: Team[]): TeamDrawResult[] => {
     console.log('Starting draw simulation...');
 
     // Try up to 100 times to generate a valid draw
     for (let attempt = 1; attempt <= 100; attempt++) {
-        const result = attemptDraw();
+        const result = attemptDraw(teams);
 
         if (result && validateDraw(result)) {
             console.log(`✅ Valid draw found on attempt ${attempt}`);
@@ -24,13 +23,13 @@ export const simulateDraw = (): TeamDrawResult[] => {
 
     console.error('Could not generate valid draw after 100 attempts');
     // Return the last attempt even if invalid
-    return attemptDraw() || [];
+    return attemptDraw(teams) || [];
 };
 
 /**
  * Attempt to generate a single draw
  */
-const attemptDraw = (): TeamDrawResult[] | null => {
+const attemptDraw = (teams: Team[]): TeamDrawResult[] | null => {
     const matchups = new Map<number, Matchup[]>();
     teams.forEach(t => matchups.set(t.id, []));
 

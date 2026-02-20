@@ -6,6 +6,9 @@ import type { TeamDrawResult, Match, Fixture } from '../types';
  * the 8-regular graph into 8 perfect matchings.
  */
 export const generateFixtures = (results: TeamDrawResult[]): Fixture[] => {
+    const numTeams = results.length;
+    const expectedMatches = (numTeams * 8) / 2; // each team plays 8, each match shared
+
     // 1. Extract all unique matches
     const allMatches: Match[] = [];
     const processedPairs = new Set<string>();
@@ -30,13 +33,13 @@ export const generateFixtures = (results: TeamDrawResult[]): Fixture[] => {
         });
     });
 
-    if (allMatches.length !== 144) {
-        console.warn(`Scheduler: Expected 144 matches, found ${allMatches.length}.`);
+    if (allMatches.length !== expectedMatches) {
+        console.warn(`Scheduler: Expected ${expectedMatches} matches, found ${allMatches.length}.`);
     }
 
     // 2. solve using backtracking
     // We try to find 8 disjoint perfect matchings
-    const schedule = solveBacktracking(allMatches, 8);
+    const schedule = solveBacktracking(allMatches, 8, numTeams);
 
     // 3. Convert to Fixtures
     const fixtures: Fixture[] = [];
@@ -54,10 +57,10 @@ export const generateFixtures = (results: TeamDrawResult[]): Fixture[] => {
 /**
  * Recursive solver to find 'numRounds' perfect matchings
  */
-const solveBacktracking = (edges: Match[], numRounds: number): Match[] => {
+const solveBacktracking = (edges: Match[], numRounds: number, numTeams: number): Match[] => {
     // Try up to 10 restarts of the whole process
     for (let attempt = 0; attempt < 10; attempt++) {
-        const result = recursiveStep(edges, 1, numRounds);
+        const result = recursiveStep(edges, 1, numRounds, numTeams);
         if (result) return result;
         console.log(`Scheduler attempt ${attempt + 1} failed, retrying...`);
     }
@@ -70,39 +73,28 @@ const solveBacktracking = (edges: Match[], numRounds: number): Match[] => {
     }));
 };
 
-const recursiveStep = (currentEdges: Match[], round: number, totalRounds: number): Match[] | null => {
-    // Base case: All rounds done
+const recursiveStep = (currentEdges: Match[], round: number, totalRounds: number, numTeams: number): Match[] | null => {
     if (round > totalRounds) {
         return [];
     }
 
-    // Heuristic: Try to find a perfect matching for this round
-    // We try multiple times because greedy is randomized
-    // As rounds increase, graph gets sparser, so we might need more attempts or just get lucky
     const maxMatchingAttempts = 100;
 
     for (let i = 0; i < maxMatchingAttempts; i++) {
-        const matching = findRandomPerfectMatching(currentEdges, 36);
+        const matching = findRandomPerfectMatching(currentEdges, numTeams);
 
         if (matching) {
-            // Found a valid set of 18 matches for this round
-            // Recurse for next round
             const remainingEdges = currentEdges.filter(e => !matching.includes(e));
-
-            const nextResult = recursiveStep(remainingEdges, round + 1, totalRounds);
+            const nextResult = recursiveStep(remainingEdges, round + 1, totalRounds, numTeams);
 
             if (nextResult) {
-                // Success! Mark these matches with current round and return
                 const currentRoundMatches = matching.map(m => ({ ...m, matchday: round }));
                 return [...currentRoundMatches, ...nextResult];
             }
-            // If recursion failed, loop continues (backtrack to try a different matching for this round)
-            // But actually, for 8-regular class 1, almost ANY perfect matching is extensible?
-            // Not necessarily. But we have 100 attempts at THIS level.
         }
     }
 
-    return null; // Backtrack
+    return null;
 };
 
 /**

@@ -1,3 +1,14 @@
+export type Tournament = 'champions' | 'europa' | 'conference';
+
+export interface TournamentConfig {
+    id: Tournament;
+    name: string;
+    shortName: string;
+    logo: string;
+    accentColor: string;
+    tagline: string;
+}
+
 export interface Team {
     id: number;
     name: string;
