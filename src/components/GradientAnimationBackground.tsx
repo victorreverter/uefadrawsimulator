@@ -1,7 +1,13 @@
 import React, { useEffect } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
+import type { Tournament } from '../types';
 
-export const GradientAnimationBackground: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface BackgroundProps {
+    children: React.ReactNode;
+    tournament?: Tournament;
+}
+
+export const GradientAnimationBackground: React.FC<BackgroundProps> = ({ children, tournament }) => {
     const mouseX = useMotionValue(0);
     const mouseY = useMotionValue(0);
 
@@ -23,11 +29,51 @@ export const GradientAnimationBackground: React.FC<{ children: React.ReactNode }
         return () => window.removeEventListener('mousemove', handleMouseMove);
     }, [mouseX, mouseY]);
 
+    // Define color palettes based on the selected tournament
+    const getColors = () => {
+        switch (tournament) {
+            case 'champions':
+                // Classic deep blues, purples, and pinks
+                return {
+                    orb1: 'bg-indigo-600/40',
+                    orb2: 'bg-blue-600/30',
+                    orb3: 'bg-purple-600/30',
+                    orb4: 'bg-pink-500/40',
+                };
+            case 'europa':
+                // Warm oranges, reds, and yellows
+                return {
+                    orb1: 'bg-orange-600/40',
+                    orb2: 'bg-red-600/30',
+                    orb3: 'bg-yellow-600/30',
+                    orb4: 'bg-rose-500/40',
+                };
+            case 'conference':
+                // Vibrant greens, teals, and cyans
+                return {
+                    orb1: 'bg-emerald-600/40',
+                    orb2: 'bg-teal-600/30',
+                    orb3: 'bg-cyan-600/30',
+                    orb4: 'bg-green-500/40',
+                };
+            default:
+                // Universal / Home palette
+                return {
+                    orb1: 'bg-purple-600/40',
+                    orb2: 'bg-blue-600/30',
+                    orb3: 'bg-pink-600/30',
+                    orb4: 'bg-indigo-500/40',
+                };
+        }
+    };
+
+    const colors = getColors();
+
     return (
-        <div className="relative min-h-screen w-full overflow-hidden bg-[#030712] font-sans selection:bg-purple-500/30">
+        <div className="relative min-h-screen w-full overflow-hidden bg-[#030712] font-sans selection:bg-white/10 transition-colors duration-1000">
             {/* Background Gradient Mesh Orbs */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                {/* Orb 1: Purple orbit */}
+                {/* Orb 1 */}
                 <motion.div
                     animate={{
                         x: ['0%', '20%', '0%', '-20%', '0%'],
@@ -35,10 +81,10 @@ export const GradientAnimationBackground: React.FC<{ children: React.ReactNode }
                         scale: [1, 1.2, 0.8, 1.1, 1],
                     }}
                     transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                    className="absolute -top-[10%] -left-[10%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-purple-600/40 rounded-full mix-blend-screen blur-[100px]"
+                    className={`absolute -top-[10%] -left-[10%] w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] rounded-full mix-blend-screen blur-[100px] transition-colors duration-1000 ${colors.orb1}`}
                 />
 
-                {/* Orb 2: Blue orbit */}
+                {/* Orb 2 */}
                 <motion.div
                     animate={{
                         x: ['0%', '-30%', '10%', '-10%', '0%'],
@@ -46,10 +92,10 @@ export const GradientAnimationBackground: React.FC<{ children: React.ReactNode }
                         scale: [1, 1.3, 0.9, 1.2, 1],
                     }}
                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                    className="absolute top-[20%] -right-[10%] w-[60vw] h-[60vw] max-w-[800px] max-h-[800px] bg-blue-600/30 rounded-full mix-blend-screen blur-[120px]"
+                    className={`absolute top-[20%] -right-[10%] w-[60vw] h-[60vw] max-w-[800px] max-h-[800px] rounded-full mix-blend-screen blur-[120px] transition-colors duration-1000 ${colors.orb2}`}
                 />
 
-                {/* Orb 3: Pink orbit */}
+                {/* Orb 3 */}
                 <motion.div
                     animate={{
                         x: ['0%', '20%', '-20%', '10%', '0%'],
@@ -57,12 +103,12 @@ export const GradientAnimationBackground: React.FC<{ children: React.ReactNode }
                         scale: [1, 1.5, 0.8, 1.3, 1],
                     }}
                     transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
-                    className="absolute -bottom-[10%] left-[20%] w-[55vw] h-[55vw] max-w-[700px] max-h-[700px] bg-pink-600/30 rounded-full mix-blend-screen blur-[100px]"
+                    className={`absolute -bottom-[10%] left-[20%] w-[55vw] h-[55vw] max-w-[700px] max-h-[700px] rounded-full mix-blend-screen blur-[100px] transition-colors duration-1000 ${colors.orb3}`}
                 />
 
                 {/* Orb 4: Interactive Mouse Follower */}
                 <motion.div
-                    className="absolute top-1/2 left-1/2 w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] -translate-x-1/2 -translate-y-1/2 bg-indigo-500/40 rounded-full mix-blend-screen blur-[90px]"
+                    className={`absolute top-1/2 left-1/2 w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full mix-blend-screen blur-[90px] transition-colors duration-200 ${colors.orb4}`}
                     style={{
                         x: smoothMouseX,
                         y: smoothMouseY,

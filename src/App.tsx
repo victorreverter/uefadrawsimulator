@@ -124,7 +124,7 @@ function App() {
   };
 
   return (
-    <GradientAnimationBackground>
+    <GradientAnimationBackground tournament={appState === 'home' ? undefined : selectedTournament}>
       <AnimatePresence mode="wait">
 
         {/* HOME SCREEN */}
