@@ -156,7 +156,7 @@ function App() {
               <motion.div
                 initial={{ opacity: 0, y: -30 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="text-center mb-12"
+                className="text-center mb-4"
               >
                 {/* Back button */}
                 <motion.button
@@ -179,9 +179,6 @@ function App() {
                     {meta.shortName}
                   </h1>
                 </div>
-                <h2 className="text-3xl md:text-4xl font-semibold text-white mb-2">
-                  Draw Simulator 2025-2026
-                </h2>
               </motion.div>
 
               {/* States */}
